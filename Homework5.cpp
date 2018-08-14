@@ -1,5 +1,5 @@
 /*
-	This is Homework #4
+	This is Homework #5
 	by David Bengel
 
 */
@@ -9,104 +9,98 @@
 #include <iostream>
 #include <cmath>
 #include <string>
+#include <cstdlib>
 using namespace std;
 
 /* Function definitions */
-string formatWithHyphen(string isbn10);
-bool validateInput(string isbn);
-char getCheckSum(string isbn);
-
-const int ISBNLENGTH = 9;
+int countVowels(int counts[], char inputStr[], int size);
+void displayCounts(string text[], int counts[], int size);
 
 
-int main(void)
+int main()
 {
-	string isbn;
+	const int VOWEL_CNT = 5;
+	const int SIZE = 300;
+	// Array of text to display counts
+	string VOWELS_TEXT[VOWEL_CNT] = { "a - A", "e - E", "i - I", "o - O", "u - U" };
+	char str[SIZE]; 			// input string
+	int vowelCnt[VOWEL_CNT]; 	// array of vowel counts
 
-
-	cout << "CIS22A Homework 4 BEGIN\n"; 
-
-
-
-
-	cout <<
-		"This program calculates the checksum of a 9-digit ISBN code and display the 10-digit ISBN."
-		<< endl;
-	cout << "Enther the 9 digits for the ISBN code or X to exit: ";
-	cin >> isbn;
-	while (isbn != "X")
+	cout << "This program counts the vowel occurrences in input phrase\n";
+	cout << "Enter a phrase and hit Enter (maximum length " << SIZE - 1 << "): ";
+	cin.getline(str, SIZE);
+	int totalCount;
+	while (strlen(str))
 	{
-		bool isValid = validateInput(isbn);
-		if (!isValid)
-		{
-			cout << "\nThe input ISBN code is not valid.\n";
-		}
-		else
-		{
-			char extra = getCheckSum(isbn);
-			cout << "\nThe 10-digit ISBN code is " << isbn + extra << endl;
-			cout << "\nThe hyphen-formatted ISBN code is " <<
-				formatWithHyphen(isbn + extra) << endl;
-		}
-		cout << "Enter the 9 digits for the ISBN code or X to exit: ";
-		cin >> isbn;
+
+		// TO DO: Invoke the function countVowels with 3 parameters using the variables and constants defined above.
+		totalCount = countVowels(vowelCnt, str, VOWEL_CNT);
+
+		// TO DO: Invoke the function displayCounts with 3 parameters using the variables and constants defined above.
+		displayCounts(VOWELS_TEXT, vowelCnt, VOWEL_CNT);
+
+		cout << "Total of vowels is  " << totalCount << endl;
+
+		cout << "Enter a phrase and hit Enter (maximum length " << SIZE - 1 << "): ";
+		cin.getline(str, SIZE);
+
 	}
-
-
-
-
-
-	cout << "CIS22A Homework 4 END\n";
-	return 1;
+	return 0;
 }
 
-
-char getCheckSum(string isbn)
+int countVowels(int counts[], char inputStr[], int size)
 {
-	char cReturnValue;
-	int iCheckSum = 0;
-	for (int i = 0 ; i < ISBNLENGTH ; ++i)
-	{
-		iCheckSum += (isbn.at(i) - '0') * (i + 1);
-	}
-	iCheckSum %= 11;
-	if (iCheckSum == 10)
-		cReturnValue = 'X';
-	else
-		cReturnValue = iCheckSum + '0';
-	
-	return cReturnValue;
-}
+	int totalVowelCount=0;
 
-bool validateInput(string isbn)
-{
-	bool bReturnValue = true;
-	if (isbn.length() != ISBNLENGTH)
+	//  Clear the vowel count array before using
+	for (int i = 0; i < size; i++)
+		counts[i] = 0;
+
+	for(int i=0; inputStr[i] != NULL;i++)
 	{
-		bReturnValue = false;
-	}
-	else
-	{
-		for (int i = 0; i < ISBNLENGTH; ++i)
+		switch (inputStr[i])
 		{
-			if ( (isbn.at(i)-'0') < 0 || (isbn.at(i) - '0') > 9 )
-			{
-				bReturnValue = false;
-				break;
-			}
+		case 'A':
+		case 'a':
+			counts[0]++;
+			totalVowelCount++;
+			break;
+		case 'E':
+		case 'e':
+			counts[1]++;
+			totalVowelCount++;
+			break;
+		case 'I':
+		case 'i':
+			counts[2]++;
+			totalVowelCount++;
+			break;
+		case 'O':
+		case 'o':
+			counts[3]++;
+			totalVowelCount++;
+			break;
+		case 'U':
+		case 'u':
+			counts[4]++;
+			totalVowelCount++;
+			break;
+		default:
+			// consonant
+			break;
 		}
 	}
-
-	return bReturnValue;
+	return totalVowelCount;
 }
 
-
-// after first, fourth, and 9th digit
-string formatWithHyphen(string isbn10)
+void displayCounts(string text[], int counts[], int size)
 {
-	isbn10.insert(9,1, '-');
-	isbn10.insert(4, 1, '-');
-	isbn10.insert(1, 1, '-');
+	cout << "Vowel \tCount\n\n";
+	for (int i = 0; i < size; i++)
+	{
+		cout << text[i] << "\t" << counts[i] << endl;
+	}
 
-	return isbn10;
+	return;
 }
+
